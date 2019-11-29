@@ -1,4 +1,5 @@
 #!/bin/bash
+# this script requires pstree. apt install psmisc will install pstree on ubuntu
 
 # create for loop to check all containers that exist on the computer
 for c in $(docker ps | grep nodeConfig | awk {'print $1'}) ; do
