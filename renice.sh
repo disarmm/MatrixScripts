@@ -17,3 +17,4 @@ for c in $(docker ps | grep nodeConfig | awk {'print $1'}) ; do
 done
 
 # if you want to see the changing renice values you can run "ps -eo pid,ppid,ni,comm | grep gman" from the host
+# just for the record -20 is the highest priority while 20 is the lowest priority. Yes this sounds backwards, but you can google it if you dont believe me
