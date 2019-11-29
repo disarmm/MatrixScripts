@@ -9,7 +9,7 @@ for c in $(docker ps | grep nodeConfig | awk {'print $1'}) ; do
 	# then we need to get the host PID based on the entrypoint PID
 	gmanPID=$(pstree -p ${entrypointPID} | cut -d "(" -f 3 | cut -d ")" -f 1)
 	# now we run the if then statement to change the CPU priority using the host PID of the gman process running inside each container
-	if [ miningStatus == "true" ] ; then
+	if [ ${miningStatus} == "true" ] ; then
 		renice -n -20 -p ${gmanPID} &>/dev/null # i made it silent so it doesn't ouput anything
 	else
 		renice -n 0 -p ${gmanPID} &>/dev/null
