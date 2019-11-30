@@ -51,7 +51,7 @@ done
 }
 
 checkNodeMenu=$(
-whiptail --title "Matrix AI Network Installer" --menu "How do you like your MAN?" 20 90 8 \
+whiptail --title "Matrix AI Network Installer" --menu "What would you like to know about your MAN?" 20 90 8 \
         '1)' "Mining - Check if nodes are mining" \
         '2)' "Syncing - Check the syncing progress/status of your nodes" \
 	'3)' "Peer Count - Check the number of peers each container has" \
