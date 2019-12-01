@@ -62,21 +62,22 @@ contChoice=$(whiptail --title "Log Reducing" --menu "Which container logs would 
 exitStatus=$?
 if [ ${exitStatus} -eq 0 ]; then
         contName=$( docker ps --format '{{.Names}}' | sed -n "${contChoice}"p)
-fi
-contLog=$(docker inspect -f '{{.LogPath}}' ${contName} 2> /dev/null)
-echo "$(tail -n 50 $contLog)" > $contLog
-if [ $? -eq 0 ]; then
-        echo "Container logs for ${contName} have been shortened."
+	contLog=$(docker inspect -f '{{.LogPath}}' ${contName} 2> /dev/null)
+	echo "$(tail -n 50 $contLog)" > $contLog
+
+	if [ $? -eq 0 ]; then
+        	echo "Container logs for ${contName} have been shortened."
+	fi
 fi
 }
-
+whiptail --title "Matrix AI Network Docker Maintenance" --msgbox "This tool is specifically for simplifying docker maintenance tasks. This will not work for standalone nodes" 10 90
 checkNodeMenu=$(
-whiptail --title "Matrix AI Network Maintenance" --menu "Please select an option:" 20 90 8 \
+whiptail --title "Matrix AI Network Docker Maintenance" --menu "Please select an option:" 20 90 8 \
         '1)' "Mining - Check if nodes are mining" \
         '2)' "Syncing - Check the syncing progress/status of your nodes" \
 	'3)' "Peer Count - Check the number of peers each container has" \
 	'4)' "Block Number - Check the current block number for all containers" \
-	'5)' "Shorten Docker Logs - This will reduce the size of your docker logs" \
+	'5)' "Shorten Logs - This will reduce the size of your docker logs to 25 lines" \
         '6)' "exit" 3>&2 2>&1 1>&3
 )
 
