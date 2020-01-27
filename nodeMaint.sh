@@ -5,8 +5,15 @@
 lb(){
         printf "\n"
 }
+runningCheck(){
+	if [ $(docker ps | sed -n '1!p' | wc -l) -eq 0 ]; then
+		echo "ERROR: No containers currently running"
+		exit 1
+	fi
+}
 
 function mining(){
+runningCheck
 lb
 echo "This is a list of your containers"
 docker ps | grep nodeConfig
@@ -18,6 +25,7 @@ done
 }
 
 function syncing(){
+runningCheck
 lb
 echo "This is a list of your containers"
 docker ps | grep nodeConfig
@@ -29,6 +37,7 @@ done
 }
 
 function peers(){
+runningCheck
 lb
 echo "This is a list of your containers"
 docker ps | grep nodeConfig
@@ -40,6 +49,7 @@ done
 }
 
 function blockNumber(){
+runningCheck
 lb
 echo "This is a list of your containers"
 docker ps | grep nodeConfig
@@ -51,6 +61,7 @@ done
 }
 
 function shortenLogs(){
+runningCheck
 i=0
 W=()
 while read -r line; do
