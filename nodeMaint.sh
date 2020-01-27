@@ -5,6 +5,14 @@
 lb(){
         printf "\n"
 }
+checkDocker(){
+	if [ -x "$(command -v docker)" ]; then
+		:
+	else
+		echo "Docker does not exist on this system. This script is for docker setups only."
+		exit 1
+	fi
+}
 runningCheck(){
 	if [ $(docker ps | sed -n '1!p' | wc -l) -eq 0 ]; then
 		echo "ERROR: No containers currently running"
@@ -81,7 +89,8 @@ if [ ${exitStatus} -eq 0 ]; then
 	fi
 fi
 }
-whiptail --title "Matrix AI Network Docker Maintenance" --msgbox "This tool is specifically for simplifying docker maintenance tasks. This will not work for standalone nodes" 10 90
+checkDocker
+runningCheck
 checkNodeMenu=$(
 whiptail --title "Matrix AI Network Docker Maintenance" --menu "Please select an option:" 20 90 8 \
         '1)' "Mining - Check if nodes are mining" \
