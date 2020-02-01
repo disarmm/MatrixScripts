@@ -89,6 +89,24 @@ if [ ${exitStatus} -eq 0 ]; then
 	fi
 fi
 }
+obtainLogs(){
+i=0
+W=()
+while read -r line; do
+    let i=$i+1
+    W+=($i "$line")
+done < <( docker ps -a --format '{{.Names}}' )
+ITYPE=$(whiptail --title "Collecting Logs..." --menu "From which container would you like to retrieve logs?" 22 80 12 "${W[@]}" 3>&1 1>&2 2>&3)
+exitStatus=$?
+if [ ${exitStatus} = 0 ]; then
+        logChoice=$(docker ps -a --format '{{.Names}}' | sed -n "`echo "$ITYPE p" | sed 's/ //'`")
+	for logs in $(docker exec -i ${logChoice} bash -c "ls -tr /matrix/MatrixLog/ | tail --lines=5") ; do
+		docker cp $logChoice:/matrix/MatrixLog/$logs /tmp
+	done
+fi
+lb
+echo "Your logs have been copied to the /tmp directory"
+}
 checkDocker
 runningCheck
 checkNodeMenu=$(
@@ -98,7 +116,8 @@ whiptail --title "Matrix AI Network Docker Maintenance" --menu "Please select an
 	'3)' "Peer Count - Check the number of peers each container has" \
 	'4)' "Block Number - Check the current block number for all containers" \
 	'5)' "Shorten Logs - This will reduce the size of your docker logs to 25 lines" \
-        '6)' "exit" 3>&2 2>&1 1>&3
+	'6)' "Obtain Logs - This option will gather the last 5 log entries for troubleshooting" \
+        'X)' "exit" 3>&2 2>&1 1>&3
 )
 
 case $checkNodeMenu in
@@ -117,7 +136,10 @@ case $checkNodeMenu in
 	"5)")
 		shortenLogs
 		;;
-        "6)")
+	"6)")
+                obtainLogs
+                ;;
+        "X)")
                 exit
                 ;;
 esac
