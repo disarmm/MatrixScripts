@@ -97,15 +97,16 @@ while read -r line; do
     W+=($i "$line")
 done < <( docker ps -a --format '{{.Names}}' )
 ITYPE=$(whiptail --title "Collecting Logs..." --menu "From which container would you like to retrieve logs?" 22 80 12 "${W[@]}" 3>&1 1>&2 2>&3)
+mkdir -p /tmp/MatrixLog
 exitStatus=$?
 if [ ${exitStatus} = 0 ]; then
         logChoice=$(docker ps -a --format '{{.Names}}' | sed -n "`echo "$ITYPE p" | sed 's/ //'`")
 	for logs in $(docker exec -i ${logChoice} bash -c "ls -tr /matrix/MatrixLog/ | tail --lines=5") ; do
-		docker cp $logChoice:/matrix/MatrixLog/$logs /tmp
+		docker cp $logChoice:/matrix/MatrixLog/$logs /tmp/MatrixLog
 	done
 fi
 lb
-echo "Your logs have been copied to the /tmp directory"
+echo "Your logs have been copied to the /tmp/MatrixLog directory"
 }
 checkDocker
 runningCheck
